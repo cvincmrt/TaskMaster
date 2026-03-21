@@ -5,19 +5,19 @@ namespace App;
 abstract class Task
 {
     protected ?int $id = null;
-    protected ?int $projectId = null;
+    protected int $projectId;
     protected ?int $userId = null;
     protected string $title;
-    protected string $type; // todo, doing, done, default=todo
-    protected string $status; // bug, feature
+    protected string $type; // bug, feature
+    protected string $status; // todo, doing, done, default=todo
     protected int $priority; // default=1
 
-    public function __construct(int $projectId, int $userId, string $title, string $type = "todo", string $status, int $priority = 1){
+    public function __construct(int $projectId, int $userId, string $title, string $status = "todo", string $type = "bug", int $priority = 1){
         $this->projectId = $projectId;
         $this->userId = $userId;
         $this->title = $title;
-        $this->type = $type;
         $this->status = $status;
+        $this->type = $type;
         $this->priority = $priority;
     }
 
@@ -29,12 +29,7 @@ abstract class Task
     {
         return $this->title;
     }
-
-    public function getType() :string
-    {
-        return $this->type;
-    }
-
+    
     public function getStatus() :string
     {
         return $this->status;
