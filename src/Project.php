@@ -7,6 +7,7 @@ class Project
     private ?int $id = null;
     private string $name;
     private string $description;
+    private string $createdAt;
  
     public function __construct(string $name, string $description)
     {
@@ -32,6 +33,11 @@ class Project
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    public function setCreatedAt($created_at)
+    {
+        $this->createdAt = $created_at;
     }
 
 }

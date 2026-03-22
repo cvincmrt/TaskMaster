@@ -40,4 +40,14 @@ abstract class Task
         return $this->priority;
     }
 
+    // Settery
+    
+    public function setId($id){
+        $this->id = $id;
+    }
+
+    public function setPriority($priority){
+        $this->priority = $priority;
+    }
+
 }
