@@ -14,11 +14,15 @@ use App\TaskRepository;
 $connect = new Database();
 $pdo = $connect->getConnection();
 
-$projects = new ProjectRepository($pdo);
-$projects->getAll();
+$projectRepo = new ProjectRepository($pdo);
+$projectsList = $projectRepo->getAll();
 
-$tasks = new TaskRepository($pdo);
-$tasksList = $tasks->getTasksByProjectId(1);
+$taskRepo = new TaskRepository($pdo);
+
+if(isset($_GET["projectId"])){
+    $tasksList = $taskRepo->getTasksByProjectId((int)$_GET["projectId"]);
+}
+
 
 include __DIR__ . "/../views/dashboard.php";
 

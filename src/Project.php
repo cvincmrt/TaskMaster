@@ -40,4 +40,8 @@ class Project
         $this->createdAt = $created_at;
     }
 
+    public function getCreatedAt(){
+        return $this->createdAt;
+    }
+
 }
