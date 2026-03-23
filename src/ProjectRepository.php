@@ -33,4 +33,16 @@ class ProjectRepository
 
         return $projects;
     }
+
+    public function save(Project $project)
+    {
+        $sql = "INSERT INTO projects (name, description) VALUES (:name, :description)";
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            ":name" => $project->getName(),
+            ":description" => $project->getDescription()
+        ]);
+    }
+
 }

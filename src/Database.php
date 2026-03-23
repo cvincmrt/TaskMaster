@@ -8,7 +8,7 @@ use PDOException;
 class Database
 {
     private string $hostname = "localhost";
-    private string $dbname = "taskmaster";
+    private string $dbname = "taskmaster_db";
     private string $charset = "utf8mb4";
 
     private string $user = "root";
@@ -23,7 +23,7 @@ class Database
             $this->conn = new PDO($dns,$this->user,$this->password);
         }
         catch(PDOException $e){
-            die("Nepodarila sa spojit s databazou!!!").$e->getMessage();
+            echo ("Nepodarila sa spojit s databazou!!!").$e->getMessage();
         }
     return $this->conn;
     }

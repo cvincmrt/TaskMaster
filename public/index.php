@@ -15,6 +15,24 @@ $connect = new Database();
 $pdo = $connect->getConnection();
 
 $projectRepo = new ProjectRepository($pdo);
+
+if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])){
+
+    if($_POST["action"] === "create"){
+        $name = $_POST["nameForm"] ?? "";
+        $description = $_POST["descriptionForm"] ?? "";
+
+        $project = new Project($name, $description);
+
+        $projectRepo->save($project);
+        $_SESSION["success"] = "A project has been added to the database.";
+        
+        header("Location:index.php");
+        exit;
+    }
+}
+
+
 $projectsList = $projectRepo->getAll();
 
 $taskRepo = new TaskRepository($pdo);

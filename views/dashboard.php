@@ -15,8 +15,21 @@ use App\FeatureTask;
   </head>
   <body>
     
-    <div class="container">
+    <div class="container p-4">
+
+        <?php if(isset($_SESSION["success"])): ?>
+            <div class="alert alert-success" id="msg" role="alert">
+                <?= $_SESSION["success"]; unset($_SESSION["success"]); ?>
+            </div>
+        <?php elseif(isset($_SESSION["error"])): ?>
+            <div class="alert alert-danger" id="msg" role="alert">
+                <?= $_SESSION["error"]; unset($_SESSION["error"]); ?>
+            </div>
+        <?php endif ?>
+
         <h1>Projects</h1>
+
+        <?php include __DIR__ . "/addProject.php"; ?>
         
         <table class="table ">
             <tr>    
@@ -63,5 +76,13 @@ use App\FeatureTask;
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script src="main.js"></script>
+    <script>
+        setTimeout(function() {
+        var msg = document.getElementById('msg');
+        if (msg) {
+            msg.style.display = 'none';
+        }
+    }, 3000);
+    </script>
   </body>
 </html>
