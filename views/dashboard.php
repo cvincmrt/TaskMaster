@@ -43,35 +43,12 @@ use App\FeatureTask;
                 <td><?= $project->getName(); ?></td>
                 <td><?= $project->getDescription(); ?></td>
                 <td><?= $project->getCreatedAt(); ?></td>
-                <td><a href="index.php?projectId=<?= $project->getId(); ?>">Tasks</a></td>
+                <td><a href="../views/projectDetail.php?projectId=<?= $project->getId(); ?>">Tasks</a></td>
             </tr>
             <?php endforeach ?>
         </table>
         
-        <?php if(isset($tasksList)): ?>
-            <h1>Tasks</h1>
-            <table class="table ">
-                <tr>    
-                    <th>Title</th>
-                    <th>Status</th>
-                    <th>Type</th>
-                    <th>Priority</th>
-                </tr>
-
-                <?php foreach($tasksList as $task): ?>
-                <tr>
-                    <td><?= $task->getTitle(); ?></td>
-                    <td><?= $task->getStatus(); ?></td>
-                    <td><?= $task->getType(); ?></td>
-                    <td>
-                        <span class="badge <?= ($task instanceof BugTask) ? "bg-danger" : "bg-primary"; ?>">
-                            <?= $task->getCalculatedPriority(); ?>
-                        </span>  
-                    </td>
-                </tr>
-                <?php endforeach ?>
-            </table>
-        <?php endif ?>
+       
     </div>  
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>

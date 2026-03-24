@@ -34,6 +34,28 @@ class ProjectRepository
         return $projects;
     }
 
+    public function getOne($projectId)
+    {
+        $project = null;
+
+        $sql = "SELECT * FROM projects WHERE id = :projectId LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute([
+            ":projectId" => $projectId
+        ]);
+
+        if($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            $project = new Project($row["name"], $row["description"]);
+            $project->setId((int)$row["id"]);
+            $project->setCreatedAt($row["created_at"]);
+            
+        }
+
+        return $project;
+    }
+
     public function save(Project $project)
     {
         $sql = "INSERT INTO projects (name, description) VALUES (:name, :description)";

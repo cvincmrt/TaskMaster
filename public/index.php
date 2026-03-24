@@ -35,12 +35,5 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])){
 
 $projectsList = $projectRepo->getAll();
 
-$taskRepo = new TaskRepository($pdo);
-
-if(isset($_GET["projectId"])){
-    $tasksList = $taskRepo->getTasksByProjectId((int)$_GET["projectId"]);
-}
-
-
 include __DIR__ . "/../views/dashboard.php";
 
