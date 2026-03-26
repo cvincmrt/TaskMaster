@@ -1,32 +1,15 @@
 <?php
+require_once __DIR__ . '/../init.php';
 
-session_start();
-
-require_once __DIR__ . "/../vendor/autoload.php";
-
-use App\Database;
-use App\Task;
 use App\BugTask;
 use App\FeatureTask;
-use App\Project;
-use App\ProjectRepository;
-use App\TaskRepository;
-
-$connect = new Database();
-$pdo = $connect->getConnection();
-
-$taskRepo = new TaskRepository($pdo);
 
 if(isset($_GET["projectId"])){
-    $projectRepo = new ProjectRepository($pdo);
-    $project = $projectRepo->getOne((int)$_GET["projectId"]);
-  
 
-    $tasksList = $taskRepo->getTasksByProjectId((int)$_GET["projectId"]);
+    $data = $controller->show((int)$_GET["projectId"]);
 }
 
 ?>
-
 
 <!doctype html>
 <html lang="en">
@@ -42,12 +25,12 @@ if(isset($_GET["projectId"])){
     <div class="container p-4">
        <div class="mb-5">
             <h1 class="badge text-bg-primary fs-1 mb-5">Project</h1>
-            <h3>Project name: <?= $project->getName(); ?></h3>
-            <p class="fs-4">Description: <?= $project->getDescription(); ?></p>
-            <span>Create at: <?= $project->getCreatedAt(); ?></span>
+            <h3>Project name: <?= $data["project"]->getName(); ?></h3>
+            <p class="fs-4">Description: <?= $data["project"]->getDescription(); ?></p>
+            <span>Create at: <?= $data["project"]->getCreatedAt(); ?></span>
       </div>
 
-        <?php if(isset($tasksList)): ?>
+        <?php if(isset($data["tasks"])): ?>
             <h1>Tasks</h1>
                 <table class="table ">
                     <tr>    
@@ -57,7 +40,7 @@ if(isset($_GET["projectId"])){
                         <th>Priority</th>
                     </tr>
 
-                    <?php foreach($tasksList as $task): ?>
+                    <?php foreach($data["tasks"] as $task): ?>
                         <tr>
                             <td><?= $task->getTitle(); ?></td>
                             <td><?= $task->getStatus(); ?></td>
