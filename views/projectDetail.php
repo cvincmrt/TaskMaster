@@ -5,8 +5,24 @@ use App\BugTask;
 use App\FeatureTask;
 
 if(isset($_GET["projectId"])){
-
     $data = $controller->show((int)$_GET["projectId"]);
+}
+
+if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])){
+
+    if($_POST["action"] === "create"){
+        $title = $_POST["titleForm"] ?? "";
+        $status = $_POST["statusForm"] ?? "";
+        $type = $_POST["typeForm"] ?? "";
+        $priority = $_POST["priorityForm"] ?? "";
+
+        $controller->addTask($title, $status, $type, (int)$priority);
+
+        $_SESSION["success"] = "The task has been added to the project.";
+        
+        header("Location:projectDetail.php");
+        exit;
+    }
 }
 
 ?>
@@ -29,6 +45,36 @@ if(isset($_GET["projectId"])){
             <p class="fs-4">Description: <?= $data["project"]->getDescription(); ?></p>
             <span>Create at: <?= $data["project"]->getCreatedAt(); ?></span>
       </div>
+
+        <form action="projectDetail.php" method="POST" class="pt-4 pb-5">
+            <input type="hidden" name="action" value="create">
+            <div class="row g-3">
+
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="titleForm" placeholder="Task title">
+                </div>
+
+                <div class="col-sm-2">
+                    <select class="form-select" aria-label="Default select example" name="statusForm">
+                        <option selected value="todo">todo</option>
+                        <option value="doing">doing</option>
+                        <option value="done">done</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" name="typeForm" placeholder="Type">
+                </div>
+
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="priorityForm" placeholder="Priority">
+                </div>
+
+                <div class="col-sm-2 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">Create Task</button>
+                </div>
+            </div>
+        </form>
 
         <?php if(isset($data["tasks"])): ?>
             <h1>Tasks</h1>
