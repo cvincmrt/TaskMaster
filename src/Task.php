@@ -50,6 +50,11 @@ abstract class Task
         return $this->id;
     }
 
+    public function getUserId() :int
+    {
+        return $this->userId;
+    }
+
     public function getProjectId() :int
     {
         return $this->projectId;

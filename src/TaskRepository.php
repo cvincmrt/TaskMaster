@@ -29,14 +29,15 @@ class TaskRepository
             
             if($row["type"] === "bug"){
                 $task = new BugTask((int)$row["project_id"], (int)$row["user_id"], $row["title"], $row["status"], (int)$row["priority"]);
-                $task->setId((int)$row["id"]);
+                
                 
             }elseif($row["type"] === "feature"){
                 $task = new FeatureTask((int)$row["project_id"], (int)$row["user_id"], $row["title"], $row["status"], (int)$row["priority"]);
-                $task->setId((int)$row["id"]);
+               
             }
             
             if($task){
+                $task->setId((int)$row["id"]);
                 $tasks[] = $task;
             }
         }
@@ -49,10 +50,14 @@ class TaskRepository
         $sql = "INSERT INTO tasks (project_id, user_id, title, status, type, priority) VALUES (:project_id, :user_id, :title, :status, :type, :priority)";
         $stmt = $this->db->prepare($sql);
 
-        $stmt->execute([
-            ":project_id" => $task->getProjectId(),
-            
-        ]);
+        return  $stmt->execute([
+                    ":project_id" => $task->getProjectId(),
+                    ":user_id" => $task->getUserId(),
+                    ":title" => $task->getTitle(),
+                    ":status" => $task->getStatus(),
+                    ":type" => $task->getType(),
+                    ":priority" => $task->getCalculatedPriority()
+                ]);
 
     }
 

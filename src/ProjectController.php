@@ -34,20 +34,22 @@ class ProjectController
         return $this->projectRepo->save($project);
     }
 
-    public function addTask(array $data) 
+    public function addTask(array $data) :int 
     {
         $task = null;
 
-        $userId = $_POST["userIdForm"];
-        $projectId = $_POST["projectIdForm"];
-        $title = $_POST["titleForm"] ?? "";
-        $status = $_POST["statusForm"] ?? "";
-        $type = $_POST["typeForm"] ?? "";
-        $priority = $_POST["priorityForm"] ?? "";
+        $userId = $data["userIdForm"];
+        $projectId = $data["projectIdForm"];
+        $title = $data["titleForm"] ?? "";
+        $status = $data["statusForm"] ?? "";
+        $type = $data["typeForm"] ?? "";
+        $priority = $data["priorityForm"] ?? "";
+        
         
 
         if($type === "bug"){
             $task = new BugTask((int)$projectId, (int)$userId, $title, $status, (int)$priority);
+            
         }elseif($type === "feature"){
             $task = new FeatureTask((int)$projectId, (int)$userId, $title, $status, (int)$priority);
         }
@@ -55,6 +57,12 @@ class ProjectController
         if($task){
             $this->taskRepo->save($task);
         }
-        //return 1;
+        
+        return $projectId;
+    }
+
+    public function changeStatus(array $data) :bool
+    {
+        return true;
     }
 }

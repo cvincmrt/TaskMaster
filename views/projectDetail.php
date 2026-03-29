@@ -4,23 +4,31 @@ require_once __DIR__ . '/../init.php';
 use App\BugTask;
 use App\FeatureTask;
 
-if(isset($_GET["projectId"])){
-    $data = $controller->show((int)$_GET["projectId"]);
-}
-
 if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])){
 
     if($_POST["action"] === "create"){
       
-        $project_id = $controller->addTask($_POST);
+        $projectId = $controller->addTask($_POST);
 
         $_SESSION["success"] = "The task has been added to the project.";
         
-        header("Location:projectDetail.php?projectId=".$_POST["projectId"]);
+        header("Location:projectDetail.php?projectId=".$projectId);
         exit;
+    }
+
+    if($_POST["action"] === "changeStatus"){
+        $controller->changeStatus($_POST);
+
+        $_SESSION["success"] = "llllllll.";
+        
+        header("Location:projectDetail.php?projectId=".(int)$_POST["projectId"]);
+        exit;        
     }
 }
 
+if(isset($_GET["projectId"])){
+    $data = $controller->show((int)$_GET["projectId"]);
+}
 ?>
 
 <!doctype html>
@@ -33,6 +41,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])){
     
   </head>
   <body>
+    <div class="container p-4">
     <?php if(isset($_SESSION["success"])): ?>
             <div class="alert alert-success" id="msg" role="alert">
                 <?= $_SESSION["success"]; unset($_SESSION["success"]); ?>
@@ -43,7 +52,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])){
             </div>
         <?php endif ?>
     
-    <div class="container p-4">
+    
        <div class="mb-5">
             <h1 class="badge text-bg-primary fs-1 mb-5">Project</h1>
             <h3>Project name: <?= $data["project"]->getName(); ?></h3>
@@ -74,7 +83,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])){
                 </div>
 
                 <div class="col-sm-1">
-                    <select class="form-select" aria-label="Default select example" name="statusForm">
+                    <select class="form-select" aria-label="Default select example" name="priorityForm">
                         <option selected value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -111,11 +120,17 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])){
                             <td><?= $task->getType(); ?></td>
                             <td>
                                 <span class="badge <?= ($task instanceof BugTask) ? "bg-danger" : "bg-primary"; ?>">
-                                    <?= $task->getCalculatedPriority(); ?>
+                                    <?= $task->getPriority(); ?>
                                 </span>  
                             </td>
                             <td>
-                                <a href="projectDetail.php?taskId=<?= $task->getId(); ?>" class="btn btn-warning">Save</a>
+                                <form action="projectDetail.php" method="POST">
+                                    <input type="hidden" name="action" value="changeStatus">
+                                    <input type="hidden" name="taskIdForm" value="<?= $task->getId(); ?>">
+                                    <input type="hidden" name="actualStatus" value="<?= $task->getStatus(); ?>">
+                                    <input type="hidden" name="projectId" value="<?= $data["project"]->getId(); ?>">
+                                    <button type="submit" class="btn btn-warning">Save</button>
+                                </form>
                             </td>
                         </tr>
                     <?php endforeach ?>
