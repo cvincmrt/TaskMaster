@@ -45,6 +45,16 @@ abstract class Task
         return $this->type;
     }
 
+    public function getId() :int
+    {
+        return $this->id;
+    }
+
+    public function getProjectId() :int
+    {
+        return $this->projectId;
+    }
+
     // Settery
     
     public function setId($id){

@@ -11,16 +11,12 @@ if(isset($_GET["projectId"])){
 if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])){
 
     if($_POST["action"] === "create"){
-        $title = $_POST["titleForm"] ?? "";
-        $status = $_POST["statusForm"] ?? "";
-        $type = $_POST["typeForm"] ?? "";
-        $priority = $_POST["priorityForm"] ?? "";
-
-        $controller->addTask($title, $status, $type, (int)$priority);
+      
+        $project_id = $controller->addTask($_POST);
 
         $_SESSION["success"] = "The task has been added to the project.";
         
-        header("Location:projectDetail.php");
+        header("Location:projectDetail.php?projectId=".$_POST["projectId"]);
         exit;
     }
 }
@@ -37,6 +33,15 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])){
     
   </head>
   <body>
+    <?php if(isset($_SESSION["success"])): ?>
+            <div class="alert alert-success" id="msg" role="alert">
+                <?= $_SESSION["success"]; unset($_SESSION["success"]); ?>
+            </div>
+        <?php elseif(isset($_SESSION["error"])): ?>
+            <div class="alert alert-danger" id="msg" role="alert">
+                <?= $_SESSION["error"]; unset($_SESSION["error"]); ?>
+            </div>
+        <?php endif ?>
     
     <div class="container p-4">
        <div class="mb-5">
@@ -49,25 +54,31 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])){
         <form action="projectDetail.php" method="POST" class="pt-4 pb-5">
             <input type="hidden" name="action" value="create">
             <div class="row g-3">
+                <input type="hidden" name="projectIdForm" value="<?= $data["project"]->getId() ;?>">
+                <input type="hidden" name="userIdForm" value="1">
 
-                <div class="col-sm-3">
+                <div class="col-sm-5">
                     <input type="text" class="form-control" name="titleForm" placeholder="Task title">
                 </div>
 
                 <div class="col-sm-2">
-                    <select class="form-select" aria-label="Default select example" name="statusForm">
-                        <option selected value="todo">todo</option>
-                        <option value="doing">doing</option>
-                        <option value="done">done</option>
-                    </select>
+                    <input type="text" class="form-control" name="statusForm" value="todo">
                 </div>
 
                 <div class="col-sm-2">
-                    <input type="text" class="form-control" name="typeForm" placeholder="Type">
+                    <select class="form-select" aria-label="Default select example" name="typeForm">
+                        <option selected>task type</option>
+                        <option value="bug">bug</option>
+                        <option value="feature">feature</option>
+                    </select>
                 </div>
 
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" name="priorityForm" placeholder="Priority">
+                <div class="col-sm-1">
+                    <select class="form-select" aria-label="Default select example" name="statusForm">
+                        <option selected value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
                 </div>
 
                 <div class="col-sm-2 d-flex justify-content-end">
@@ -84,17 +95,27 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])){
                         <th>Status</th>
                         <th>Type</th>
                         <th>Priority</th>
+                        <th>Action</th>
                     </tr>
 
                     <?php foreach($data["tasks"] as $task): ?>
                         <tr>
                             <td><?= $task->getTitle(); ?></td>
-                            <td><?= $task->getStatus(); ?></td>
+                            <td>
+                                <select class="form-select" aria-label="Default select example" name="statusTask">
+                                    <option selected><?= $task->getStatus(); ?></option>
+                                    <option value="doing">doing</option>
+                                    <option value="done">done</option>
+                                </select>                               
+                            </td>
                             <td><?= $task->getType(); ?></td>
                             <td>
                                 <span class="badge <?= ($task instanceof BugTask) ? "bg-danger" : "bg-primary"; ?>">
                                     <?= $task->getCalculatedPriority(); ?>
                                 </span>  
+                            </td>
+                            <td>
+                                <a href="projectDetail.php?taskId=<?= $task->getId(); ?>" class="btn btn-warning">Save</a>
                             </td>
                         </tr>
                     <?php endforeach ?>

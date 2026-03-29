@@ -33,4 +33,28 @@ class ProjectController
         
         return $this->projectRepo->save($project);
     }
+
+    public function addTask(array $data) 
+    {
+        $task = null;
+
+        $userId = $_POST["userIdForm"];
+        $projectId = $_POST["projectIdForm"];
+        $title = $_POST["titleForm"] ?? "";
+        $status = $_POST["statusForm"] ?? "";
+        $type = $_POST["typeForm"] ?? "";
+        $priority = $_POST["priorityForm"] ?? "";
+        
+
+        if($type === "bug"){
+            $task = new BugTask((int)$projectId, (int)$userId, $title, $status, (int)$priority);
+        }elseif($type === "feature"){
+            $task = new FeatureTask((int)$projectId, (int)$userId, $title, $status, (int)$priority);
+        }
+
+        if($task){
+            $this->taskRepo->save($task);
+        }
+        //return 1;
+    }
 }
