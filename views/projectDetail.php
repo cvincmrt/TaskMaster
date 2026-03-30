@@ -7,16 +7,25 @@ use App\FeatureTask;
 if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])){
 
     if($_POST["action"] === "create"){
-      
-        $projectId = $controller->addTask($_POST);
 
-        $_SESSION["success"] = "The task has been added to the project.";
+        if($controller->validateTask($_POST)){
+            if($controller->addTask($_POST)){
+                $_SESSION["success"] = "The task has been added to the project.";
+            }else{
+                $_SESSION["error"] = "The task was not added to the project.";
+            }        
         
-        header("Location:projectDetail.php?projectId=".$projectId);
-        exit;
+            header("Location:projectDetail.php?projectId=".$_POST["projectIdForm"]);
+            exit;
+        }else{
+            $_SESSION["error"] = "Fill in all fields."; 
+
+            header("Location:projectDetail.php?projectId=".$_POST["projectIdForm"]);
+            exit;
+        }
     }
 
-    if($_POST["action"] === "changeStatus" && $_POST["saveTask"] === "save"){
+    if($_POST["action"] === "changeStatus" &&  isset($_POST["saveTask"])){
        
         if($controller->changeStatus($_POST)){
             $_SESSION["success"] = "The task status has been changed.";
@@ -28,8 +37,13 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])){
         exit;  
     }
 
-    if($_POST["action"] === "changeStatus" && $_POST["deleteTask"] === "delete"){
+    if($_POST["action"] === "changeStatus" && isset($_POST["deleteTask"])){
         
+        if($controller->deleteTask($_POST)){
+             $_SESSION["success"] = "The task has been deleted.";
+        }else{
+            $_SESSION["error"] = "The task was not deleted.";
+        }
 
         header("Location:projectDetail.php?projectId=".(int)$_POST["projectId"]);
         exit;  
@@ -90,7 +104,7 @@ if(isset($_GET["projectId"])){
 
                 <div class="col-sm-2">
                     <select class="form-select" aria-label="Default select example" name="typeForm">
-                        <option selected>task type</option>
+                        <option value="" selected>task type</option>
                         <option value="bug">bug</option>
                         <option value="feature">feature</option>
                     </select>

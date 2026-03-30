@@ -17,7 +17,7 @@ class TaskRepository
     {
         $tasks = [];
 
-        $sql = "SELECT * FROM tasks WHERE project_id = :projectId";
+        $sql = "SELECT * FROM tasks WHERE project_id = :projectId ORDER BY priority desc";
         $stmt = $this->db->prepare($sql);
 
         $stmt->execute([
@@ -71,6 +71,17 @@ class TaskRepository
         return $stmt->execute([
                 ":newStatus" => $newStatus,
                 ":taskId" => $taskId    
+                ]);
+    }
+
+    public function delete($taskId) :bool
+    {
+        $sql = "DELETE FROM tasks WHERE id = :taskId";
+
+        $stmt = $this->db->prepare($sql);
+        
+        return $stmt->execute([
+               ":taskId" => $taskId    
                 ]);
     }
 

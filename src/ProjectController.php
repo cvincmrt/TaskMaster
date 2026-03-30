@@ -38,12 +38,12 @@ class ProjectController
     {
         $task = null;
 
-        $userId = $data["userIdForm"];
-        $projectId = $data["projectIdForm"];
+        $userId = (int)$data["userIdForm"] ?? 0;
+        $projectId = (int)$data["projectIdForm"] ?? 0;
         $title = $data["titleForm"] ?? "";
-        $status = $data["statusForm"] ?? "";
+        $status = $data["statusForm"] ?? "todo";
         $type = $data["typeForm"] ?? "";
-        $priority = $data["priorityForm"] ?? "";
+        $priority = (int)$data["priorityForm"] ?? 1;
         
         
 
@@ -63,10 +63,43 @@ class ProjectController
 
     public function changeStatus(array $data) :bool
     {
-        $taskId = (int)$data["taskIdForm"] ?? "";
+        $taskId = isset($data["taskIdForm"]) ? (int)$data["taskIdForm"] : 0;
         $newStatus = $data["statusTask"] ?? "todo";
-        $projectId = (int)$data["projectId"] ?? "";
 
+        if($taskId <= 0){
+            return false;
+        }
+        
         return $this->taskRepo->saveChangeStatusTask($taskId, $newStatus);
     }
+
+    public function deleteTask(array $data) :bool
+    {
+        $taskId = (int)$data["taskIdForm"] ?? "";
+
+        return $this->taskRepo->delete($taskId);
+    }
+
+    public function validateTask(array $data) :bool
+    {
+        $taskTitle = $data["titleForm"] ?? "";
+        $type = $data["typeForm"] ?? "";
+        $priority = $data["priorityForm"] ?? "";
+
+        if(empty(trim($taskTitle))){
+            return false;
+        }
+
+        $allowedType = ["bug", "feature"];
+        if(!in_array($type, $allowedType)){
+            return false;
+        }
+
+        if(!is_numeric($priority) || $priority < 1 || $priority > 3){
+            return false;
+        }
+
+        return true;        
+    }
+
 }
