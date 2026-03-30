@@ -16,24 +16,33 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])){
         exit;
     }
 
-    if($_POST["action"] === "changeStatus"){
+    if($_POST["action"] === "changeStatus" && $_POST["saveTask"] === "save"){
        
-    var_dump($_POST);
-    /*
-        $controller->changeStatus($_POST);
-
-        $_SESSION["success"] = "llllllll.";
+        if($controller->changeStatus($_POST)){
+            $_SESSION["success"] = "The task status has been changed.";
+        }else{
+            $_SESSION["error"] = "The task status has not been changed.";
+        }
         
         header("Location:projectDetail.php?projectId=".(int)$_POST["projectId"]);
-        exit;      */  
+        exit;  
+    }
+
+    if($_POST["action"] === "changeStatus" && $_POST["deleteTask"] === "delete"){
+        
+
+        header("Location:projectDetail.php?projectId=".(int)$_POST["projectId"]);
+        exit;  
     }
 }
 
 if(isset($_GET["projectId"])){
     $data = $controller->show((int)$_GET["projectId"]);
+}else{
+    header("Location: index.php");
+    exit;
 }
 
-//var_dump($data["tasks"]);
 ?>
 
 <!doctype html>
@@ -115,7 +124,7 @@ if(isset($_GET["projectId"])){
                     <?php foreach($data["tasks"] as $task): ?>
                         <tr>
                             <form action="projectDetail.php" method="POST">
-                                
+
                                 <input type="hidden" name="action" value="changeStatus">
                                 <input type="hidden" name="taskIdForm" value="<?= $task->getId(); ?>">
                                 <input type="hidden" name="projectId" value="<?= $data["project"]->getId(); ?>">
@@ -139,7 +148,8 @@ if(isset($_GET["projectId"])){
                                 </td>
 
                                 <td>
-                                    <button type="submit" class="btn btn-warning">Save</button>
+                                    <button type="submit" name="saveTask" value="save" class="btn btn-warning">Save</button>
+                                    <button type="submit" name="deleteTask" value="delete" class="btn btn-danger">Delete</button>
                                 </td>
 
                             </form>    

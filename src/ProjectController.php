@@ -64,11 +64,9 @@ class ProjectController
     public function changeStatus(array $data) :bool
     {
         $taskId = (int)$data["taskIdForm"] ?? "";
-        $actualStatus = $data["actualStatus"] ?? "todo";
+        $newStatus = $data["statusTask"] ?? "todo";
         $projectId = (int)$data["projectId"] ?? "";
 
-        $this->taskRepo->saveChangeStatusTask($taskId, $actualStatus);
-        
-        return true;
+        return $this->taskRepo->saveChangeStatusTask($taskId, $newStatus);
     }
 }

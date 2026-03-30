@@ -61,15 +61,15 @@ class TaskRepository
 
     }
 
-    public function saveChangeStatusTask($taskId, $actualStatus)
+    public function saveChangeStatusTask($taskId, $newStatus) :bool
     {
 
-        $sql = "UPDATE tasks SET status = :actualStatus WHERE id = :taskId";
+        $sql = "UPDATE tasks SET status = :newStatus WHERE id = :taskId";
 
         $stmt = $this->db->prepare($sql);
         
         return $stmt->execute([
-                ":actualStatus" => $actualStatus,
+                ":newStatus" => $newStatus,
                 ":taskId" => $taskId    
                 ]);
     }
