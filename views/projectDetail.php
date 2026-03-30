@@ -17,18 +17,23 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])){
     }
 
     if($_POST["action"] === "changeStatus"){
+       
+    var_dump($_POST);
+    /*
         $controller->changeStatus($_POST);
 
         $_SESSION["success"] = "llllllll.";
         
         header("Location:projectDetail.php?projectId=".(int)$_POST["projectId"]);
-        exit;        
+        exit;      */  
     }
 }
 
 if(isset($_GET["projectId"])){
     $data = $controller->show((int)$_GET["projectId"]);
 }
+
+//var_dump($data["tasks"]);
 ?>
 
 <!doctype html>
@@ -109,29 +114,35 @@ if(isset($_GET["projectId"])){
 
                     <?php foreach($data["tasks"] as $task): ?>
                         <tr>
-                            <td><?= $task->getTitle(); ?></td>
-                            <td>
-                                <select class="form-select" aria-label="Default select example" name="statusTask">
-                                    <option selected><?= $task->getStatus(); ?></option>
-                                    <option value="doing">doing</option>
-                                    <option value="done">done</option>
-                                </select>                               
-                            </td>
-                            <td><?= $task->getType(); ?></td>
-                            <td>
-                                <span class="badge <?= ($task instanceof BugTask) ? "bg-danger" : "bg-primary"; ?>">
-                                    <?= $task->getPriority(); ?>
-                                </span>  
-                            </td>
-                            <td>
-                                <form action="projectDetail.php" method="POST">
-                                    <input type="hidden" name="action" value="changeStatus">
-                                    <input type="hidden" name="taskIdForm" value="<?= $task->getId(); ?>">
-                                    <input type="hidden" name="actualStatus" value="<?= $task->getStatus(); ?>">
-                                    <input type="hidden" name="projectId" value="<?= $data["project"]->getId(); ?>">
+                            <form action="projectDetail.php" method="POST">
+                                
+                                <input type="hidden" name="action" value="changeStatus">
+                                <input type="hidden" name="taskIdForm" value="<?= $task->getId(); ?>">
+                                <input type="hidden" name="projectId" value="<?= $data["project"]->getId(); ?>">
+
+                                <td><?= $task->getTitle(); ?></td>
+
+                                <td>
+                                    <select class="form-select" aria-label="Default select example" name="statusTask">
+                                        <option value="todo" <?= $task->getStatus() === "todo" ? "selected" : ""; ?>>todo</option>
+                                        <option value="doing" <?= $task->getStatus() === "doing" ? "selected" : ""; ?>>doing</option>
+                                        <option value="done" <?= $task->getStatus() === "done" ? "selected" : ""; ?>>done</option>                                     
+                                    </select>                               
+                                </td>
+                                
+                                <td><?= $task->getType(); ?></td>
+
+                                <td>
+                                    <span class="badge <?= ($task instanceof BugTask) ? "bg-danger" : "bg-primary"; ?>">
+                                        <?= $task->getPriority(); ?>
+                                    </span>  
+                                </td>
+
+                                <td>
                                     <button type="submit" class="btn btn-warning">Save</button>
-                                </form>
-                            </td>
+                                </td>
+
+                            </form>    
                         </tr>
                     <?php endforeach ?>
                 </table>

@@ -45,7 +45,7 @@ class TaskRepository
         return $tasks; 
     }
 
-    public function save(Task $task)
+    public function createTask(Task $task)
     {
         $sql = "INSERT INTO tasks (project_id, user_id, title, status, type, priority) VALUES (:project_id, :user_id, :title, :status, :type, :priority)";
         $stmt = $this->db->prepare($sql);
@@ -59,6 +59,19 @@ class TaskRepository
                     ":priority" => $task->getCalculatedPriority()
                 ]);
 
+    }
+
+    public function saveChangeStatusTask($taskId, $actualStatus)
+    {
+
+        $sql = "UPDATE tasks SET status = :actualStatus WHERE id = :taskId";
+
+        $stmt = $this->db->prepare($sql);
+        
+        return $stmt->execute([
+                ":actualStatus" => $actualStatus,
+                ":taskId" => $taskId    
+                ]);
     }
 
 }
