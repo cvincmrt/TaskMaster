@@ -17,5 +17,6 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])){
 
 $projectsList = $controller->index();
 
+
 include __DIR__ . "/../views/dashboard.php";
 

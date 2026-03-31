@@ -15,7 +15,10 @@ class ProjectRepository
     public function getAll()
     {
         $projects = [];
-        $sql = "SELECT * FROM projects";
+        $sql = "SELECT projects.*, COUNT(tasks.id) as task_count 
+                FROM projects
+                LEFT JOIN tasks ON projects.id = tasks.project_id 
+                GROUP BY projects.id";
 
         $stmt = $this->db->query($sql);
         
@@ -27,6 +30,7 @@ class ProjectRepository
             if($project){
                 $project->setId((int)$row["id"]);
                 $project->setCreatedAt($row["created_at"]);
+                $project->setCountTasks((int)$row["task_count"]);
                 $projects[] = $project; 
             }
         }

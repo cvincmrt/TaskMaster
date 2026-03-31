@@ -70,6 +70,12 @@ if(isset($_GET["projectId"])){
   </head>
   <body>
     <div class="container p-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="../public/index.php">Projects</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Detail</li>
+            </ol>
+        </nav>
     <?php if(isset($_SESSION["success"])): ?>
             <div class="alert alert-success" id="msg" role="alert">
                 <?= $_SESSION["success"]; unset($_SESSION["success"]); ?>
@@ -126,49 +132,52 @@ if(isset($_GET["projectId"])){
 
         <?php if(isset($data["tasks"])): ?>
             <h1>Tasks</h1>
-                <table class="table ">
-                    <tr>    
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Type</th>
-                        <th>Priority</th>
-                        <th>Action</th>
-                    </tr>
-
-                    <?php foreach($data["tasks"] as $task): ?>
-                        <tr>
-                            <form action="projectDetail.php" method="POST">
-
-                                <input type="hidden" name="action" value="changeStatus">
-                                <input type="hidden" name="taskIdForm" value="<?= $task->getId(); ?>">
-                                <input type="hidden" name="projectId" value="<?= $data["project"]->getId(); ?>">
-
-                                <td><?= $task->getTitle(); ?></td>
-
-                                <td>
-                                    <select class="form-select" aria-label="Default select example" name="statusTask">
-                                        <option value="todo" <?= $task->getStatus() === "todo" ? "selected" : ""; ?>>todo</option>
-                                        <option value="doing" <?= $task->getStatus() === "doing" ? "selected" : ""; ?>>doing</option>
-                                        <option value="done" <?= $task->getStatus() === "done" ? "selected" : ""; ?>>done</option>                                     
-                                    </select>                               
-                                </td>
-                                
-                                <td><?= $task->getType(); ?></td>
-
-                                <td>
-                                    <span class="badge <?= ($task instanceof BugTask) ? "bg-danger" : "bg-primary"; ?>">
-                                        <?= $task->getPriority(); ?>
-                                    </span>  
-                                </td>
-
-                                <td>
-                                    <button type="submit" name="saveTask" value="save" class="btn btn-warning">Save</button>
-                                    <button type="submit" name="deleteTask" value="delete" class="btn btn-danger">Delete</button>
-                                </td>
-
-                            </form>    
+                <table class="table table-hover">
+                    <thead class="thead-dark">
+                        <tr>    
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Type</th>
+                            <th>Priority</th>
+                            <th>Action</th>
                         </tr>
-                    <?php endforeach ?>
+                    </thead>
+                    <tbody>
+                        <?php foreach($data["tasks"] as $task): ?>
+                            <tr>
+                                <form action="projectDetail.php" method="POST">
+
+                                    <input type="hidden" name="action" value="changeStatus">
+                                    <input type="hidden" name="taskIdForm" value="<?= $task->getId(); ?>">
+                                    <input type="hidden" name="projectId" value="<?= $data["project"]->getId(); ?>">
+
+                                    <td><?= $task->getTitle(); ?></td>
+
+                                    <td>
+                                        <select class="form-select" aria-label="Default select example" name="statusTask">
+                                            <option value="todo" <?= $task->getStatus() === "todo" ? "selected" : ""; ?>>todo</option>
+                                            <option value="doing" <?= $task->getStatus() === "doing" ? "selected" : ""; ?>>doing</option>
+                                            <option value="done" <?= $task->getStatus() === "done" ? "selected" : ""; ?>>done</option>                                     
+                                        </select>                               
+                                    </td>
+                                    
+                                    <td><?= $task->getType(); ?></td>
+
+                                    <td>
+                                        <span class="badge <?= ($task instanceof BugTask) ? "bg-danger" : "bg-primary"; ?>">
+                                            <?= $task->getPriority(); ?>
+                                        </span>  
+                                    </td>
+
+                                    <td>
+                                        <button type="submit" name="saveTask" value="save" class="btn btn-warning">Save</button>
+                                        <button type="submit" name="deleteTask" value="delete" class="btn btn-danger">Delete</button>
+                                    </td>
+
+                                </form>    
+                            </tr>
+                        <?php endforeach ?>
+                    </tbody>
                 </table>
         <?php endif ?>
     </div>
@@ -180,7 +189,7 @@ if(isset($_GET["projectId"])){
         if (msg) {
             msg.style.display = 'none';
         }
-    }, 3000);
+    }, 2000);
     </script>
   </body>
 </html>    

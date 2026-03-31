@@ -8,6 +8,7 @@ class Project
     private string $name;
     private string $description;
     private string $createdAt;
+    private int $countTasks;
  
     public function __construct(string $name, string $description)
     {
@@ -42,6 +43,14 @@ class Project
 
     public function getCreatedAt(){
         return $this->createdAt;
+    }
+
+    public function getCountTasks(){
+        return $this->countTasks;
+    }
+
+    public function setCountTasks($countTasks){
+        $this->countTasks = $countTasks;
     }
 
 }

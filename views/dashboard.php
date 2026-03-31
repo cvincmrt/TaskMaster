@@ -16,6 +16,12 @@ use App\FeatureTask;
   <body>
     
     <div class="container p-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.php">Projects</a></li>
+                
+            </ol>
+        </nav>
 
         <?php if(isset($_SESSION["success"])): ?>
             <div class="alert alert-success" id="msg" role="alert">
@@ -31,7 +37,7 @@ use App\FeatureTask;
 
         <?php include __DIR__ . "/addProject.php"; ?>
         
-        <table class="table ">
+        <table class="table table-hover">
             <tr>    
                 <th>Name</th>
                 <th>Descrition</th>
@@ -43,7 +49,11 @@ use App\FeatureTask;
                 <td><?= $project->getName(); ?></td>
                 <td><?= $project->getDescription(); ?></td>
                 <td><?= $project->getCreatedAt(); ?></td>
-                <td><a href="../views/projectDetail.php?projectId=<?= $project->getId(); ?>">Tasks</a></td>
+                <td>
+                    <a class="btn btn-primary" href="../views/projectDetail.php?projectId=<?= $project->getId(); ?>">Tasks
+                        <span class="badge bg-white text-danger font-weight-bold"><?= $project->getCountTasks(); ?></span>
+                    </a>
+                </td>
             </tr>
             <?php endforeach ?>
         </table>
@@ -59,7 +69,7 @@ use App\FeatureTask;
         if (msg) {
             msg.style.display = 'none';
         }
-    }, 3000);
+    }, 2000);
     </script>
   </body>
 </html>
