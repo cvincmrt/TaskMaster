@@ -45,7 +45,7 @@ class TaskRepository
         return $tasks; 
     }
 
-    public function createTask(Task $task)
+    public function saveTask(Task $task)
     {
         $sql = "INSERT INTO tasks (project_id, user_id, title, status, type, priority) VALUES (:project_id, :user_id, :title, :status, :type, :priority)";
         $stmt = $this->db->prepare($sql);

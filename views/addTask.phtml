@@ -1,0 +1,36 @@
+<form action="index.php?page=save-task" method="POST" class="pt-4 pb-5">
+        <input type="hidden" name="action" value="save-task">
+
+        <div class="row g-3">
+            <input type="hidden" name="projectIdForm" value="<?= $data["project"]->getId() ;?>">
+            <input type="hidden" name="userIdForm" value="1">
+
+            <div class="col-sm-5">
+                <input type="text" class="form-control" name="titleForm" placeholder="Task title">
+            </div>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" name="statusForm" value="todo">
+            </div>
+
+            <div class="col-sm-2">
+                <select class="form-select" aria-label="Default select example" name="typeForm">
+                    <option value="" selected>task type</option>
+                    <option value="bug">bug</option>
+                    <option value="feature">feature</option>
+                </select>
+            </div>
+
+            <div class="col-sm-1">
+                <select class="form-select" aria-label="Default select example" name="priorityForm">
+                    <option selected value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+
+            <div class="col-sm-2 d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">Create Task</button>
+            </div>
+        </div>
+</form>

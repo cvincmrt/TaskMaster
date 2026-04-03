@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detail Project</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    
+  </head>
+  <body>
+    <div class="container p-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.php?page=dashboard">Projects</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Detail</li>
+            </ol>
+        </nav>
+    <?php if(isset($_SESSION["success"])): ?>
+            <div class="alert alert-success" id="msg" role="alert">
+                <?= $_SESSION["success"]; unset($_SESSION["success"]); ?>
+            </div>
+        <?php elseif(isset($_SESSION["error"])): ?>
+            <div class="alert alert-danger" id="msg" role="alert">
+                <?= $_SESSION["error"]; unset($_SESSION["error"]); ?>
+            </div>
+        <?php endif ?>
+    
+    
+       <div class="mb-5">
+            <h1 class="badge text-bg-primary fs-1 mb-5">Project</h1>
+            <h3>Project name: <?= $data["project"]->getName(); ?></h3>
+            <p class="fs-4">Description: <?= $data["project"]->getDescription(); ?></p>
+            <span>Create at: <?= $data["project"]->getCreatedAt(); ?></span>
+      </div>
+
+       <?php include __DIR__."/addTask.phtml"; ?>
+
+        <?php if(isset($data["tasks"])): ?>
+            <h1>Tasks</h1>
+                <table class="table table-hover">
+                    <thead class="thead-dark">
+                        <tr>    
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Type</th>
+                            <th>Priority</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($data["tasks"] as $task): ?>
+                            <tr>
+                                    <td><?= $task->getTitle(); ?></td>
+
+                                    <td>
+                                        <form action="index.php?page=status-change-task" method="POST">
+                                                                                      
+                                            <input type="hidden" name="taskId" value="<?= $task->getId(); ?>">
+                                            <input type="hidden" name="projectId" value="<?= $data["project"]->getId(); ?>">
+                                            
+                                            <div class="row">
+                                                <div class="col">
+                                                    <select class="form-select" aria-label="Default select example" name="statusTask">
+                                                        <option value="todo" <?= $task->getStatus() === "todo" ? "selected" : ""; ?>>todo</option>
+                                                        <option value="doing" <?= $task->getStatus() === "doing" ? "selected" : ""; ?>>doing</option>
+                                                        <option value="done" <?= $task->getStatus() === "done" ? "selected" : ""; ?>>done</option>                                     
+                                                    </select>
+                                                </div>
+                                                <div class="col">
+                                                    <button type="submit" name="saveStatus" class="btn btn-warning">Save status</button>                               
+                                                </div>    
+                                            </div>
+                                        </form>
+                                    </td>
+                                    
+                                    <td><?= $task->getType(); ?></td>
+
+                                    <td>
+                                        <span class="badge <?= $task->getColorTask(); ?>">
+                                            <?= $task->getPriority(); ?>
+                                        </span>  
+                                    </td>
+
+                                    <td>
+                                        <form action="index.php?page=delete-task" method="POST">
+                                           
+                                            <input type="hidden" name="taskId" value="<?= $task->getId(); ?>">
+                                            <input type="hidden" name="projectId" value="<?= $data["project"]->getId(); ?>">
+
+                                            <button type="submit" name="deleteTask" value="delete" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </td>
+                            </tr>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
+        <?php endif ?>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="main.js"></script>
+    <script>
+        setTimeout(function() {
+        var msg = document.getElementById('msg');
+        if (msg) {
+            msg.style.display = 'none';
+        }
+    }, 2000);
+    </script>
+  </body>
+</html>    

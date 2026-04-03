@@ -60,7 +60,7 @@ class ProjectRepository
         return $project;
     }
 
-    public function save(Project $project)
+    public function saveProject(Project $project) :bool
     {
         $sql = "INSERT INTO projects (name, description) VALUES (:name, :description)";
         $stmt = $this->db->prepare($sql);

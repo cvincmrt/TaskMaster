@@ -11,6 +11,7 @@ abstract class Task
     protected string $type; // bug, feature
     protected string $status; // todo, doing, done, default=todo
     protected int $priority; // default=1
+    protected string $colorTask;
 
     public function __construct(int $projectId, int $userId, string $title, string $status = "todo", string $type, int $priority = 1){
         $this->projectId = $projectId;
@@ -60,6 +61,10 @@ abstract class Task
         return $this->projectId;
     }
 
+    public function getColorTask() :string
+    {
+        return (basename(get_class($this)) === "BugTask") ? "bg-danger" : "bg-primary";
+    }
     // Settery
     
     public function setId($id){

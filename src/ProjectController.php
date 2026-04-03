@@ -27,14 +27,22 @@ class ProjectController
         ];
     }
 
-    public function store($name, $description)
+    public function storeProject(array $data) :bool
     {
-        $project = new Project($name, $description);
+        $name = $data["nameForm"] ?? "";
+        $description = $data["descriptionForm"] ?? "";
+
+        if(empty(trim($name)) || empty(trim($description))){
+            $_SESSION["error"] = "Incorrectly filled fields";
+            return false;
+        }
         
-        return $this->projectRepo->save($project);
+        $project = new Project($name, $description);
+               
+        return $this->projectRepo->saveProject($project);
     }
 
-    public function addTask(array $data) :int 
+    public function storeTask(array $data) :bool 
     {
         $task = null;
 
@@ -44,26 +52,36 @@ class ProjectController
         $status = $data["statusForm"] ?? "todo";
         $type = $data["typeForm"] ?? "";
         $priority = (int)$data["priorityForm"] ?? 1;
-        
-        
 
+        if(empty(trim($title))){
+            $_SESSION["error"] = "Task title cannot be empty.";
+            return false;
+        }
+
+        $allowedType = ["bug", "feature"];
+        if(!in_array($type, $allowedType)){
+            $_SESSION["error"] = "Please select a task type.";
+            return false;
+        }
+
+        if(!is_numeric($priority) || $priority < 1 || $priority > 3){
+            $_SESSION["error"] = "Priority must be number.";
+            return false;
+        }
+        
         if($type === "bug"){
             $task = new BugTask((int)$projectId, (int)$userId, $title, $status, (int)$priority);
             
         }elseif($type === "feature"){
             $task = new FeatureTask((int)$projectId, (int)$userId, $title, $status, (int)$priority);
         }
-
-        if($task){
-            $this->taskRepo->createTask($task);
-        }
-        
-        return $projectId;
+               
+        return $this->taskRepo->saveTask($task);
     }
 
     public function changeStatus(array $data) :bool
     {
-        $taskId = isset($data["taskIdForm"]) ? (int)$data["taskIdForm"] : 0;
+        $taskId = isset($data["taskId"]) ? (int)$data["taskId"] : 0;
         $newStatus = $data["statusTask"] ?? "todo";
 
         if($taskId <= 0){
@@ -75,31 +93,9 @@ class ProjectController
 
     public function deleteTask(array $data) :bool
     {
-        $taskId = (int)$data["taskIdForm"] ?? "";
+        $taskId = (int)$data["taskId"] ?? "";
 
         return $this->taskRepo->delete($taskId);
-    }
-
-    public function validateTask(array $data) :bool
-    {
-        $taskTitle = $data["titleForm"] ?? "";
-        $type = $data["typeForm"] ?? "";
-        $priority = $data["priorityForm"] ?? "";
-
-        if(empty(trim($taskTitle))){
-            return false;
-        }
-
-        $allowedType = ["bug", "feature"];
-        if(!in_array($type, $allowedType)){
-            return false;
-        }
-
-        if(!is_numeric($priority) || $priority < 1 || $priority > 3){
-            return false;
-        }
-
-        return true;        
     }
 
 }
