@@ -6,11 +6,13 @@ class ProjectController
 {
     private ProjectRepository $projectRepo;
     private TaskRepository $taskRepo;
+    private UserRepository $userRepo;
 
-    public function __construct(ProjectRepository $projectRepository, TaskRepository $taskRepository)
+    public function __construct(ProjectRepository $projectRepository, TaskRepository $taskRepository, UserRepository $userRepository)
     {
         $this->projectRepo = $projectRepository;
         $this->taskRepo = $taskRepository;
+        $this->userRepo = $userRepository;
     }
 
     public function index()
