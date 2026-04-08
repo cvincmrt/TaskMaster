@@ -23,7 +23,7 @@ public function getAllUsers() :array
 
         if($user){
             $user->setUserId((int)$row["id"]);
-            $user->setRawPassword[""];
+            $user->setRawPassword($row["password"]);
             $users[] = $user;
         }
     }

@@ -25,7 +25,8 @@ class ProjectController
        
         return [
             "project" => $this->projectRepo->getOne($id),
-            "tasks" => $this->taskRepo->getTasksByProjectId($id)
+            "tasks" => $this->taskRepo->getTasksByProjectId($id),
+            "users" => $this->userRepo->getAllUsers()
         ];
     }
 
@@ -48,7 +49,7 @@ class ProjectController
     {
         $task = null;
 
-        $userId = (int)$data["userIdForm"] ?? 0;
+        $userId = (int)$data["userForm"] ?? 0;
         $projectId = (int)$data["projectIdForm"] ?? 0;
         $title = $data["titleForm"] ?? "";
         $status = $data["statusForm"] ?? "todo";
@@ -57,6 +58,11 @@ class ProjectController
 
         if(empty(trim($title))){
             $_SESSION["error"] = "Task title cannot be empty.";
+            return false;
+        }
+
+        if($userId <= 0){
+            $_SESSION["error"] = "Please select a valid user.";
             return false;
         }
 
@@ -77,6 +83,7 @@ class ProjectController
         }elseif($type === "feature"){
             $task = new FeatureTask((int)$projectId, (int)$userId, $title, $status, (int)$priority);
         }
+
                
         return $this->taskRepo->saveTask($task);
     }

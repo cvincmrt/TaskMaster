@@ -7,6 +7,9 @@ abstract class Task
     protected ?int $id = null;
     protected int $projectId;
     protected ?int $userId = null;
+    protected ?string $userName = null;
+
+    protected string $role;
     protected string $title;
     protected string $type; // bug, feature
     protected string $status; // todo, doing, done, default=todo
@@ -75,4 +78,19 @@ abstract class Task
         $this->priority = $priority;
     }
 
+    public function setUserName($userName){
+        $this->userName = $userName;
+    }
+
+    public function getUserName(){
+        return $this->userName;
+    }
+
+    public function getRole(){
+        return $this->role;
+    }
+
+    public function setRole($role){
+        $this->role = $role;
+    }
 }

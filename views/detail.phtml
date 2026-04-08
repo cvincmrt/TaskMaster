@@ -41,6 +41,7 @@
                     <thead class="thead-dark">
                         <tr>    
                             <th>Title</th>
+                            <th>Assignee:</th>
                             <th>Status</th>
                             <th>Type</th>
                             <th>Priority</th>
@@ -51,7 +52,14 @@
                         <?php foreach($data["tasks"] as $task): ?>
                             <tr>
                                     <td><?= $task->getTitle(); ?></td>
-
+                                    <td>
+                                        <?php if($task->getUserName()): ?>    
+                                            <span class="badge bg-info text-dark">
+                                                <?= $task->getUserName()."_".$task->getRole(); ?>
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="text-muted">Unassigned</span>
+                                        <?php endif; ?>
                                     <td>
                                         <form action="index.php?page=status-change-task" method="POST">
                                                                                       

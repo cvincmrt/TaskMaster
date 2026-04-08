@@ -5,7 +5,7 @@
             <input type="hidden" name="projectIdForm" value="<?= $data["project"]->getId() ;?>">
             <input type="hidden" name="userIdForm" value="1">
 
-            <div class="col-sm-5">
+            <div class="col-sm-3">
                 <input type="text" class="form-control" name="titleForm" placeholder="Task title">
             </div>
 
@@ -26,6 +26,15 @@
                     <option selected value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
+                </select>
+            </div>
+
+            <div class="col-sm-2">
+                <select class="form-select" aria-label="Default select example" name="userForm">
+                    <option selected value="">-- Select Developer --</option>
+                    <?php foreach($data["users"] as $user): ?>
+                        <option value="<?= $user->getUserId() ;?>"><?= $user->getUsername(); ?></option>
+                    <?php endforeach ?>
                 </select>
             </div>
 

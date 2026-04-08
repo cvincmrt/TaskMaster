@@ -17,7 +17,10 @@ class TaskRepository
     {
         $tasks = [];
 
-        $sql = "SELECT * FROM tasks WHERE project_id = :projectId ORDER BY priority desc";
+        $sql = "SELECT tasks.*,users.username,users.role FROM tasks 
+        LEFT JOIN users ON tasks.user_id = users.id
+        WHERE tasks.project_id = :projectId ORDER BY priority desc";
+
         $stmt = $this->db->prepare($sql);
 
         $stmt->execute([
@@ -38,6 +41,8 @@ class TaskRepository
             
             if($task){
                 $task->setId((int)$row["id"]);
+                $task->setUserName($row["username"]);
+                $task->setRole($row["role"]);
                 $tasks[] = $task;
             }
         }
