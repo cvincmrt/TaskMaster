@@ -11,7 +11,7 @@ class UserRepository
         $this->db = $pdo;
     }
 
-public function getAllUsers() :array
+public function getAllUsers(): array
 {
     $users = [];    
     $sql = "SELECT * FROM users";
@@ -31,6 +31,27 @@ public function getAllUsers() :array
     return $users;
 }
     
+public function findByUsername(string $username): ?User
+{
+    $sql = "SELECT * FROM users WHERE username = :username LIMIT 1";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([
+        ":username" => $username
+    ]);
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if(!$row){
+        return null;
+    }
+
+    $user = new User($row["username"],"",$row["role"]);
+    $user->setUserId((int)$row["id"]);
+    $user->setRawPassword($row["password"]);
+
+    return $user;
+}
+
 public function save(User $user) :bool
 {
     $sql = "INSERT INTO users (username, password, role) VALUES (:username, :password, :role)";

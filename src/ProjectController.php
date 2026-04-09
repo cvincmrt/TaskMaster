@@ -30,6 +30,27 @@ class ProjectController
         ];
     }
 
+    public function login(array $data): bool
+    {
+        $username = $data["username"] ?? "";
+        $password = $data["password"] ?? "";
+
+        if(empty(trim($username)) || empty(trim($password))){
+            $_SESSION["error"] = "Invalid username or password.";
+            return false;
+        }
+
+        $user = $this->userRepo->findByUsername($username);
+
+        if($user && $user->verifyPassword($password)){
+            $_SESSION["user_id"] = $user->getUserId();
+            $_SESSION["username"] = $user->getUsername();
+            $_SESSION["role"] = $user->getRole();
+
+            return true;
+        }
+    }
+
     public function storeProject(array $data) :bool
     {
         $name = $data["nameForm"] ?? "";
