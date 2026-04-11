@@ -2,12 +2,29 @@
 
 require_once __DIR__."/../init.php";
 
-$page = $_GET["page"] ?? "dashboard";
+$page = $_GET["page"] ?? "login";
 
 switch($page){
     case "login":
         include __DIR__."/../views/login.phtml";
-        break;   
+        break;
+    
+    case "auth":
+        if($_SERVER["REQUEST_METHOD"] === "POST"){
+            
+            if($controller->login($_POST)){
+               header("Location:index.php?page=dashboard");
+               exit; 
+            }
+            header("Location:index.php?page=login");
+            exit;
+        }
+        break;
+
+    case "logout":
+        session_destroy();
+        header("Location:index.php?page=login");
+        exit;
 
     case "dashboard":
         $projectsList = $controller->index();

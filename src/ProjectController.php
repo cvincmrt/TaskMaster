@@ -30,7 +30,7 @@ class ProjectController
         ];
     }
 
-    public function login(array $data): bool
+    public function login(array $data) :bool
     {
         $username = $data["username"] ?? "";
         $password = $data["password"] ?? "";
@@ -46,9 +46,10 @@ class ProjectController
             $_SESSION["user_id"] = $user->getUserId();
             $_SESSION["username"] = $user->getUsername();
             $_SESSION["role"] = $user->getRole();
-
             return true;
         }
+        $_SESSION["error"] = "Invalid username or password.";
+        return false;
     }
 
     public function storeProject(array $data) :bool
