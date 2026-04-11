@@ -5,6 +5,10 @@ require_once __DIR__."/../init.php";
 $page = $_GET["page"] ?? "dashboard";
 
 switch($page){
+    case "login":
+        include __DIR__."/../views/login.phtml";
+        break;   
+
     case "dashboard":
         $projectsList = $controller->index();
         include __DIR__."/../views/dashboard.phtml";
