@@ -8,6 +8,9 @@
     
   </head>
   <body>
+     
+    <?php include "header.php"; ?>
+    
     <div class="container p-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -90,13 +93,15 @@
                                     </td>
 
                                     <td>
-                                        <form action="index.php?page=delete-task" method="POST">
-                                           
-                                            <input type="hidden" name="taskId" value="<?= $task->getId(); ?>">
-                                            <input type="hidden" name="projectId" value="<?= $data["project"]->getId(); ?>">
+                                        <?php if($_SESSION["role"] === "admin"): ?>
+                                            <form action="index.php?page=delete-task" method="POST">
+                                            
+                                                <input type="hidden" name="taskId" value="<?= $task->getId(); ?>">
+                                                <input type="hidden" name="projectId" value="<?= $data["project"]->getId(); ?>">
 
-                                            <button type="submit" name="deleteTask" value="delete" class="btn btn-danger">Delete</button>
-                                        </form>
+                                                <button type="submit" name="deleteTask" value="delete" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        <?php endif; ?>
                                     </td>
                             </tr>
                         <?php endforeach ?>

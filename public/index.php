@@ -2,7 +2,15 @@
 
 require_once __DIR__."/../init.php";
 
+
 $page = $_GET["page"] ?? "login";
+
+$allowedPages = ['login', 'auth']; // Stránky dostupné bez prihlásenia
+
+if (!isset($_SESSION['user_id']) && !in_array($page, $allowedPages)) {
+    header("Location: index.php?page=login");
+    exit;
+}
 
 switch($page){
     case "login":
